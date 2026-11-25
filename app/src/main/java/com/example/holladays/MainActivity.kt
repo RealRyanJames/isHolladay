@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.holladays.Titles.showUITitle
 import com.example.holladays.ui.theme.HollaDaysTheme
 import java.util.Calendar
 
@@ -48,12 +49,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val titleClass = Utilities()
-        val titleBased = titleClass.createTitleShown("What Time | Holiday Is it!")
-
         setContent {
             HollaDaysTheme {
-                createText(titleBased)
+                showLabelText()
+                createTitleMessage()
                 createButtons()
                 CreateHolidays()
             }
@@ -81,9 +80,7 @@ object Holidays {
 
         return textLabel
     }
-
 }
-
 
 fun christmas(): String {
 
@@ -95,6 +92,64 @@ fun thanksgiving(): String {
     return Holidays.isThanksGiving(true, "Merry Christmas")
 }
 
+object Titles {
+
+    fun showUITitle(): String {
+        return "HollaDays".uppercase()
+    }
+}
+
+@SuppressLint("ComposableNaming")
+fun getDaysLeft(): String {
+
+
+    return "Christmas is in ${
+        Calendar.DECEMBER - Calendar.getInstance().get(Calendar.MONTH)
+    } Month"
+}
+
+@SuppressLint("ComposableNaming")
+fun getDaysLeft1(): String {
+
+
+    return "Christmas is in ${
+        Calendar.DECEMBER - Calendar.getInstance().get(Calendar.MONTH)
+    } Month's"
+}
+
+@SuppressLint("ComposableNaming")
+@Composable
+fun showLabelText() {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(bottom = 400.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = showUITitle(),
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 5.sp
+        )
+    }
+}
+
+@Composable
+fun createTitleMessage() {
+
+    val titleClass = Utilities()
+    val titleBased = titleClass.createTitleShown("What Time | Holiday Is it!")
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(bottom = 320.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = titleBased.uppercase()
+        )
+    }
+}
 
 @SuppressLint("ComposableNaming")
 @Composable
@@ -105,25 +160,24 @@ fun createButtons() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Button(
-            onClick = {},
+        Button(onClick = { },
             modifier = Modifier.width(300.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(20, 20, 20),
                 contentColor = Color(255, 255, 255)
             ),
-
-
         ) {
 
-
-            val month = Calendar.getInstance().get(Calendar.MONTH)
-            val dayTimeHoliday = Calendar.getInstance().get(Calendar.DATE)
-            if (month == 12 && dayTimeHoliday == 25) {
-                Text(text = thanksgiving())
+            if (Calendar.DECEMBER - Calendar.getInstance().get(Calendar.MONTH) < 2) {
+                Text(
+                    getDaysLeft()
+                )
             }
-
-            Text("Christmas | December")
+            else {
+                Text(
+                    getDaysLeft1()
+                )
+            }
         }
     }
 }
@@ -147,6 +201,7 @@ fun CreateHolidays() {
 
             val month = Calendar.getInstance().get(Calendar.MONTH)
             val dayTimeHoliday = Calendar.getInstance().get(Calendar.DATE)
+
             if (month == 12 && dayTimeHoliday == 25) {
                 Text(text = christmas())
             }
